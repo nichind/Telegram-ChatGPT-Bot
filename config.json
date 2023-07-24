@@ -1,0 +1,10 @@
+{
+    "bot-token": "",
+    "chimera-api": "",
+    "character_limit": 3000,
+    "default-lore": "Standard GPT",
+    "default-language": "Русский",
+    "default-model": "gpt-3.5-turbo",
+    "start-stickers": ["CAACAgIAAxkBAAEkEGxkvaiOloqvcgPKWZr8Dhxbh1Y4oQACS1MAAuCjggfn-Y-vqOl_Py8E", "CAACAgIAAxkBAAEkEGRkvafny3mrX4zHyU3qrwxnItPcIgACPlMAAuCjggfyWu4XD2JqcC8E", "CAACAgIAAxkBAAEkEG5kvai8O06XwvFZp2zkHUTkLput1QACRlMAAuCjggelcRFLTs23LS8E", "CAACAgIAAxkBAAEkEHBkvajLUNdfkZfxjiKyQ3sT6bal_gACRFMAAuCjggdHqOeO1ko90y8E", "CAACAgIAAxkBAAEkEHJkvajmCDehDWhccu3NPZbabCGYNAACcVMAAuCjggdqQYF9GIVALi8E"],
+    "languages": ["Русский", "English"]
+}

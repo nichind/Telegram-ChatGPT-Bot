@@ -1,0 +1,17 @@
+{
+  "start-menu-РУ": "ChimeraGpt бот > @nichind\n🌐 Язык: {language}\n📜 Лор бота: {lore}\n📶 Модель: {model}",
+  "current-РУ": "Выбрано: {}",
+  "changed-РУ": "Изменено на {}",
+  "button-language-РУ": "Выбрать язык",
+  "button-clear-РУ": "Очистить историю",
+  "button-lore-РУ": "Выбрать лор",
+  "button-model-РУ": "Выбрать модель",
+
+  "start-menu-EN": "ChimeraGpt Bot > @nichind\n🌐 Language: {language}\n📜 Bot Lore: {lore}\n📶 Model: {model}",
+  "current-EN": "Selected: {}",
+  "changed-EN": "Changed to {}",
+  "button-language-EN": "Select Language",
+  "button-clear-EN": "Clear History",
+  "button-lore-EN": "Select Lore",
+  "button-model-EN": "Select Model"
+}
