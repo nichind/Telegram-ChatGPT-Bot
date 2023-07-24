@@ -173,7 +173,7 @@ async def chat(message: types.Message, state: FSMContext):
             menu.add(InlineKeyboardButton(text=model, callback_data=f'model-to>{model}'))
         await message.reply(getlocalized('current', language).format(model), reply_markup=menu)
     else:
-
+        await message.answer_chat_action("typing")
         message_log = [
             {"role": "system", "content": lore.format(language)},
         ]
