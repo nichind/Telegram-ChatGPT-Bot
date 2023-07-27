@@ -15,21 +15,43 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InlineQuer
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import InputFile
+
+
+# States
 class States(StatesGroup):
     change_custom_lore = State()
-
 class AdminStates(StatesGroup):
     send_message = State()
 
-with open('config.json', 'r', encoding='UTF-8') as f:
-    config = json.load(f)
+# Reload JSON data
+def reload_data():
+    global config, lore_dict, model_dict, buttons
+    with open('config.json', 'r', encoding='UTF-8') as f:
+        config = json.load(f)
 
-with open('./db/lore-list.json', 'r', encoding='UTF-8') as f:
-    lore_dict = json.load(f)
+    with open('./db/lore-list.json', 'r', encoding='UTF-8') as f:
+        lore_dict = json.load(f)
 
-with open('./db/model-list.json', 'r', encoding='UTF-8') as f:
-    model_dict = json.load(f)
+    with open('./db/model-list.json', 'r', encoding='UTF-8') as f:
+        model_dict = json.load(f)
 
+    buttons = {"language": [], "clear": [], "lore": [], "model": []}
+
+    with open('./db/locale.json', 'r', encoding='UTF-8') as f:
+        locs = json.load(f)
+        for key in locs.keys():
+            if str(key).startswith('button-language'):
+                buttons['language'].append(str(locs[key]))
+            elif str(key).startswith('button-clear'):
+                buttons['clear'].append(str(locs[key]))
+            elif str(key).startswith('button-lore'):
+                buttons['lore'].append(str(locs[key]))
+            elif str(key).startswith('button-model'):
+                buttons['model'].append(str(locs[key]))
+
+reload_data()
+
+# Set menu command
 startcom = types.bot_command.BotCommand(command='start', description='Restart bot.')
 
 openai.api_key = config['chimera-api']
@@ -41,20 +63,7 @@ Languages = config['languages']
 bot = Bot(config['bot-token'])
 dp = Dispatcher(bot, storage=MemoryStorage())
 
-buttons = {"language": [], "clear": [], "lore": [], "model": []}
-
-with open('./db/locale.json', 'r', encoding='UTF-8') as f:
-    locs = json.load(f)
-    for key in locs.keys():
-        if str(key).startswith('button-language'):
-            buttons['language'].append(str(locs[key]))
-        elif str(key).startswith('button-clear'):
-            buttons['clear'].append(str(locs[key]))
-        elif str(key).startswith('button-lore'):
-            buttons['lore'].append(str(locs[key]))
-        elif str(key).startswith('button-model'):
-            buttons['model'].append(str(locs[key]))
-
+# Localize string
 def getlocalized(line: str, lang: str):
     with open('./db/locale.json', 'r', encoding='UTF-8') as f:
         data = json.load(f)
@@ -67,7 +76,6 @@ def getlocalized(line: str, lang: str):
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message, state: FSMContext):
     await bot.set_my_commands(commands=[startcom])
-    await bot.send_message(config['log-chat-id'], f"User Started @{message.from_user.username} - {message.from_user.full_name}")
     with open('./db/message-log.json', 'r', encoding='UTF-8') as log:
         data = json.load(log)
         data[str(message.from_user.id)] = []
@@ -122,6 +130,13 @@ async def start(message: types.Message, state: FSMContext):
     await bot.send_sticker(message.from_user.id, sticker)
     await bot.send_message(message.from_user.id, str(getlocalized('start-menu', language)).format(language=language, model=model, lore=lore), reply_markup=menu)
 
+# Reload JSON dict without restaring bot
+@dp.message_handler(commands=['reload'])
+async def reloadjson(message: types.Message, state: FSMContext):
+    reload_data()
+    await message.answer('✅')
+
+# Send message to all bot users
 @dp.message_handler(commands=['send'])
 async def sendcommand(message: types.Message, state: FSMContext):
     if message.from_user.id == config['admin-id']:
@@ -158,7 +173,7 @@ async def callback(call: CallbackQuery, state: FSMContext):
         await state.finish()
 
 
-
+# Chat message handler
 @dp.message_handler()
 async def chat(message: types.Message, state: FSMContext):
     with open('./db/user-settings.json', 'r', encoding='UTF-8') as f:
@@ -243,8 +258,6 @@ async def chat(message: types.Message, state: FSMContext):
             {"role": "system", "content": lore.format(language)},
         ]
 
-
-
         with open('./db/message-log.json', 'r', encoding='UTF-8') as f:
             data = json.load(f)
             try:
@@ -262,13 +275,16 @@ async def chat(message: types.Message, state: FSMContext):
                 f"total_characters {total_characters} exceed limit of {character_limit}, removing oldest message")
             total_characters -= len(message_log[1]["content"])
             message_log.pop(1)
+
         response = None
         try:
             response = openai.ChatCompletion.create(
                 model=str(model),
                 messages=message_log
             )
-        except: return await message.answer(getlocalized('try-later', language))
+        except Exception as e:
+            print(e)
+            return await message.answer(getlocalized('try-later', language))
 
         for answer in response['choices']:
             message_log.append({"role": "assistant", "content": answer['message']['content']})
@@ -440,4 +456,5 @@ async def changecustomlore(message: types.message, state: FSMContext):
         json.dump(data, f)
     await message.reply('✅')
 
+# Start bot
 executor.start_polling(dp, skip_updates=True)
