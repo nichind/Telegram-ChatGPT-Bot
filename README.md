@@ -7,3 +7,10 @@ ChimeraGPT bot
 2. Get ChimeraGPT api key at https://discord.gg/chimeragpt
 3. Paste bot token and api key in config.json
 4. Run run.bat
+
+# Commands
+
+| Command | Explanation               |
+|---------|---------------------------|
+| /reload | Reload JSON dict          |
+| /send   | Send message to bot users |
