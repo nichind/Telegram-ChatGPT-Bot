@@ -10,7 +10,9 @@ ChimeraGPT bot
 
 # Commands
 
-| Command | Explanation               |
-|---------|---------------------------|
-| /reload | Reload JSON dict          |
-| /send   | Send message to bot users |
+| Command | Explanation                 |
+|---------|-----------------------------|
+| /reload | Reload JSON dict            |
+| /send   | Send message to bot users   |
+| /stats  | Show bot stats (user count) |
+
