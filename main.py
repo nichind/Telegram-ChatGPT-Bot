@@ -72,6 +72,76 @@ def getlocalized(line: str, lang: str):
         try: return data[str(line + '-' + 'EN')]
         except: return 'Failed to translate.'
 
+def timestamp():
+    current_time = datetime.now()
+    return current_time.timestamp()
+
+# Get total & new users this week or today
+def getUserStats():
+    with open('./db/user-settings.json', 'r', encoding='UTF-8') as f:
+        data = json.load(f)
+
+    stats = {'ALL': len(data), 'TODAY': 0, "WEEK": 0}
+
+    for user in data:
+        try:
+            time = data[str(user)]['timestamp']
+            now = timestamp()
+
+            if now - 86400 <= time:
+                stats['TODAY'] += 1
+                if now - 604800 <= time:
+                    stats['WEEK'] += 1
+
+        except: pass
+
+    return stats
+
+
+# Check if user in database & return his settings
+def getUser(user_id: str, username = 'None'):
+    with open('./db/user-settings.json', 'r', encoding='UTF-8') as f:
+        data = json.load(f)
+
+        try:
+            user = data[str(user_id)]
+        except:
+            data[str(user_id)] = {}
+
+        if 'lang' not in data[str(user_id)]:
+            data[str(user_id)]['lang'] = config['default-language']
+            with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
+                json.dump(data, f)
+
+        language = data[str(user_id)]['lang']
+
+        if 'lore' not in data[str(user_id)]:
+            data[str(user_id)]['lore'] = config['default-lore']
+            with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
+                json.dump(data, f)
+
+        lore = data[str(user_id)]['lore']
+
+        if 'model' not in data[str(user_id)]:
+            data[str(user_id)]['model'] = config['default-model']
+            with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
+                json.dump(data, f)
+
+        model = data[str(user_id)]['model']
+
+        if 'custom-lore' not in data[str(user_id)]:
+            data[str(user_id)]['custom-lore'] = f'My username is @{username}'
+            with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
+                json.dump(data, f)
+
+        custom_lore = data[str(user_id)]['custom-lore']
+
+        if 'timestamp' not in data[str(user_id)]:
+            data[str(user_id)]['timestamp'] = timestamp()
+            with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
+                json.dump(data, f)
+
+    return (language, lore, model, custom_lore)
 
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message, state: FSMContext):
@@ -83,38 +153,8 @@ async def start(message: types.Message, state: FSMContext):
         json.dump(data, log)
     sticker = random.choice(config['start-stickers'])
 
-    with open('./db/user-settings.json', 'r', encoding='UTF-8') as f:
-        data = json.load(f)
-        try: user = data[str(message.from_user.id)]
-        except: data[str(message.from_user.id)] = {}
+    language, lore, model, custom_lore = getUser(message.from_user.id, message.from_user.username)
 
-        if 'lang' not in data[str(message.from_user.id)]:
-            data[str(message.from_user.id)]['lang'] = config['default-language']
-            with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
-                json.dump(data, f)
-
-        language = data[str(message.from_user.id)]['lang']
-
-        if 'lore' not in data[str(message.from_user.id)]:
-            data[str(message.from_user.id)]['lore'] = config['default-lore']
-            with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
-                json.dump(data, f)
-
-        lore = data[str(message.from_user.id)]['lore']
-
-        if 'model' not in data[str(message.from_user.id)]:
-            data[str(message.from_user.id)]['model'] = config['default-model']
-            with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
-                json.dump(data, f)
-
-        model = data[str(message.from_user.id)]['model']
-
-        if 'custom-lore' not in data[str(message.from_user.id)]:
-            data[str(message.from_user.id)]['custom-lore'] = f'My username is @{message.from_user.username}'
-            with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
-                json.dump(data, f)
-
-        custom_lore = data[str(message.from_user.id)]['custom-lore']
 
     if '?' in lore:
         lore = '📑 ' + lore.split('?')[0] + ' > ' +  lore.split('?')[1]
@@ -135,6 +175,12 @@ async def start(message: types.Message, state: FSMContext):
 async def reloadjson(message: types.Message, state: FSMContext):
     reload_data()
     await message.answer('✅')
+
+# Bot stats
+@dp.message_handler(commands=['stats'])
+async def botstats(message: types.Message, state: FSMContext):
+    stats = getUserStats()
+    await message.answer(f'Total users: {stats["ALL"]}\nNew users\n* Week: {stats["WEEK"]}\n* Today: {stats["TODAY"]}')
 
 # Send message to all bot users
 @dp.message_handler(commands=['send'])
@@ -178,46 +224,8 @@ async def callback(call: CallbackQuery, state: FSMContext):
 async def chat(message: types.Message, state: FSMContext):
     with open('./db/user-settings.json', 'r', encoding='UTF-8') as f:
         data = json.load(f)
-        try:
-            user = data[str(message.from_user.id)]
-        except:
-            data[str(message.from_user.id)] = {}
 
-        if 'lang' not in data[str(message.from_user.id)]:
-            data[str(message.from_user.id)]['lang'] = config['default-language']
-            with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
-                json.dump(data, f)
-
-        language = data[str(message.from_user.id)]['lang']
-
-        if 'lore' not in data[str(message.from_user.id)]:
-            data[str(message.from_user.id)]['lore'] = config['default-lore']
-            with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
-                json.dump(data, f)
-
-
-        if "?" in data[str(message.from_user.id)]['lore']:
-            lr = str(data[str(message.from_user.id)]['lore'])
-            lore = lore_dict[lr.split('?')[0]][lr.split('?')[1]]
-        elif data[str(message.from_user.id)]['lore'] != 'custom':
-            lore = lore_dict[str(data[str(message.from_user.id)]['lore'])]
-        else:
-            lore = str(data[str(message.from_user.id)]['custom-lore'])
-
-
-        if 'model' not in data[str(message.from_user.id)]:
-            data[str(message.from_user.id)]['model'] = config['default-model']
-            with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
-                json.dump(data, f)
-
-        model = data[str(message.from_user.id)]['model']
-
-        if 'custom-lore' not in data[str(message.from_user.id)]:
-            data[str(message.from_user.id)]['custom-lore'] = f'My username is @{message.from_user.username}'
-            with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
-                json.dump(data, f)
-
-        custom_lore = data[str(message.from_user.id)]['custom-lore']
+    language, lore, model, custom_lore = getUser(message.from_user.id, message.from_user.username)
 
     if message.text in buttons['clear'] and list(message.text).count(' ') <= 2:
         if '?' in lore:
@@ -313,40 +321,7 @@ async def callback(call: CallbackQuery, state: FSMContext):
             json.dump(data, f)
         sticker = random.choice(config['start-stickers'])
 
-        with open('./db/user-settings.json', 'r', encoding='UTF-8') as f:
-            data = json.load(f)
-            try:
-                user = data[str(call.from_user.id)]
-            except:
-                data[str(call.from_user.id)] = {}
-
-            if 'lang' not in data[str(call.from_user.id)]:
-                data[str(call.from_user.id)]['lang'] = config['default-language']
-                with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
-                    json.dump(data, f)
-
-            language = data[str(call.from_user.id)]['lang']
-
-            if 'lore' not in data[str(call.from_user.id)]:
-                data[str(call.from_user.id)]['lore'] = config['default-lore']
-                with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
-                    json.dump(data, f)
-
-            lore = data[str(call.from_user.id)]['lore']
-
-            if 'model' not in data[str(call.from_user.id)]:
-                data[str(call.from_user.id)]['model'] = config['default-model']
-                with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
-                    json.dump(data, f)
-
-            model = data[str(call.from_user.id)]['model']
-
-            if 'custom-lore' not in data[str(call.from_user.id)]:
-                data[str(call.from_user.id)]['custom-lore'] = f'My username is @{call.from_user.username}'
-                with open('./db/user-settings.json', 'w', encoding='UTF-8') as f:
-                    json.dump(data, f)
-
-            custom_lore = data[str(call.from_user.id)]['custom-lore']
+        language, lore, model, custom_lore = getUser(call.from_user.id, call.from_user.username)
 
         menu = ReplyKeyboardMarkup(row_width=3, resize_keyboard=True)
         menu.row(KeyboardButton(text=str(getlocalized('button-clear', language))))
