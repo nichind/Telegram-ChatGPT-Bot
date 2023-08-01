@@ -1,5 +1,5 @@
 # Telegram-ChatGPT-Bot
-ChimeraGPT bot
+ChimeraGPT bot - https://t.me/chimeragptrobot
 
 # Installation
 0. Install Python 3.11 from https://python.org

@@ -1,6 +1,6 @@
 {
-    "bot-token": "5019933475:AAFDkmqZ-xTjzTv-YlpDIzIjAydreNDJVh0",
-    "chimera-api": "Klq1ln_Uxsa2HUETNUU1Bl4Ls2x1q3tQkVm40Cc7OtE",
+    "bot-token": "",
+    "chimera-api": "",
     "character_limit": 3000,
     "default-lore": "🤖 StandardGPT",
     "default-language": "English",
