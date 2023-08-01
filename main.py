@@ -15,7 +15,33 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InlineQuer
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import InputFile
+import g4f
 
+def ChimeraIsDead(message_log: list, model: str):
+    while True:
+        try:
+            # if model == 'gpt-4':
+            response = g4f.ChatCompletion.create(
+                model='gpt-4',
+                messages=message_log,
+                provider=g4f.Provider.ChatgptAi
+            )
+            # else:
+            #     response = g4f.ChatCompletion.create(
+            #         model='gpt-3.5-turbo',
+            #         messages=message_log,
+            #         provider=g4f.Provider.Aichat
+            #     )
+            if len(str(response)) <= 1:
+                pass
+            else:
+                break
+        except KeyError:
+            pass
+        except:
+            pass
+
+    return response
 
 # States
 class States(StatesGroup):
@@ -285,24 +311,18 @@ async def chat(message: types.Message, state: FSMContext):
             message_log.pop(1)
 
         response = None
-        try:
-            response = openai.ChatCompletion.create(
-                model=str(model),
-                messages=message_log
-            )
-        except Exception as e:
-            print(e)
-            return await message.answer(getlocalized('try-later', language))
+        response = ChimeraIsDead(message_log, model)
+            # return await message.answer(getlocalized('try-later', language))
 
-        for answer in response['choices']:
-            message_log.append({"role": "assistant", "content": answer['message']['content']})
-            with open('./db/message-log.json', 'r', encoding='UTF-8') as f:
-                data = json.load(f)
-                message_log.pop(0)
-                data[str(message.from_user.id)] = message_log
-            with open('./db/message-log.json', 'w', encoding='UTF-8') as f:
-                json.dump(data, f)
-            await message.answer(answer['message']['content'])
+        # for answer in response['choices']:
+        message_log.append({"role": "assistant", "content": response})
+        with open('./db/message-log.json', 'r', encoding='UTF-8') as f:
+            data = json.load(f)
+            message_log.pop(0)
+            data[str(message.from_user.id)] = message_log
+        with open('./db/message-log.json', 'w', encoding='UTF-8') as f:
+            json.dump(data, f)
+        await message.answer(response)
 
         await state.update_data(proccess=False)
 
