@@ -15,3 +15,4 @@ ChatGPT bot - https://t.me/chimeragptrobot
 | /send   | Send message to bot users   |
 | /stats  | Show bot stats (user count) |
 
+<img src="https://komarev.com/ghpvc/?username=nichind.telegramchatgpt&color=brightgreen" alt="watching_count" />
