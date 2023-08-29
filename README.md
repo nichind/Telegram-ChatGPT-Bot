@@ -4,9 +4,8 @@ ChatGPT bot - https://t.me/chimeragptrobot
 # Installation
 0. Install Python 3.11 from https://python.org
 1. Create bot at https://t.me/BotFather
-2. Get ChimeraGPT api key at https://discord.gg/chimeragpt
-3. Paste bot token and api key in config.json
-4. Run run.bat
+2. Paste bot token in config.json
+3. Run run.bat
 
 # Commands
 
