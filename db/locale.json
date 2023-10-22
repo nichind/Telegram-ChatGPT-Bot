@@ -1,5 +1,5 @@
 {
-  "start-menu-РУ": "ChimeraGpt бот > @nichind\n🌐 Язык: {language}\n📜 Лор бота: {lore}\n📶 Модель: {model}",
+  "start-menu-РУ": "Бот OpenAI ChatGPT, разработанный @nichind\n\n\uD83C\uDF10 Язык: {language}\n\uD83D\uDCDC Лор бота: {lore}\n\uD83D\uDCF6 Модель: {model}\n\nЭтот бот бесплатен для использования.",
   "current-РУ": "Выбрано: {}",
   "changed-РУ": "Изменено на {}",
   "button-language-РУ": "🌍 Выбрать язык",
@@ -8,7 +8,7 @@
   "button-model-РУ": "📶 Выбрать модель",
   "try-later-РУ": "❗Ошибка. Попробуйте позже.",
 
-  "start-menu-EN": "ChimeraGpt Bot > @nichind\n🌐 Language: {language}\n📜 Bot Lore: {lore}\n📶 Model: {model}",
+  "start-menu-EN": "OpenAI ChatGPT bot developed by @nichind\n\n\uD83C\uDF10 Language: {language}\n📜 Bot Lore: {lore}\n📶 Model: {model}\n\nThis bot is free for use.",
   "current-EN": "Selected: {}",
   "changed-EN": "Changed to {}",
   "button-language-EN": "🌍 Select Language",
@@ -17,7 +17,7 @@
   "button-model-EN": "📶 Select Model",
   "try-later-EN": "❗Error. Try again later.",
 
-  "start-menu-FR": "Bot ChimeraGpt > @nichind\n🌐 Langue : {language}\n📜 Connaissance du bot : {lore}\n📶 Modèle : {model}",
+  "start-menu-FR": "Bot OpenAI ChatGPT développé par @nicind\n\n\uD83C\uDF10 Langue : {language}\n\uD83D\uDCDC Lore des robots: {lore}\n\uD83D\uDCF6 Modèle : {model}\n\nCe bot est gratuit.",
   "current-FR": "Sélectionné : {}",
   "changed-FR": "Changement en {}",
   "button-language-FR": "🌍Sélectionnez la langue",
@@ -26,7 +26,7 @@
   "button-model-FR": "📶Sélectionner le modèle",
   "try-later-FR": "❗Erreur. Réessayez plus tard.",
 
-  "start-menu-TÜ": "ChimeraGpt Bot > @nichind\n🌐 Dil: {language}\n📜 Bot Lore: {lore}\n📶 Model: {model}",
+  "start-menu-TÜ": "@nichind tarafından geliştirilen OpenAI ChatGPT botu\n\n\uD83C\uDF10 Dil: {language}\n\uD83D\uDCDC Bot Bilgisi: {дщку}\n\uD83D\uDCF6 Model: {model}\n\nBu botun kullanımı ücretsizdir.",
   "current-TÜ": "Seçili: {}",
   "changed-TÜ": "{} olarak değiştirildi",
   "button-language-TÜ": "🌍 Dil Seçin",
